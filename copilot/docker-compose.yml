@@ -1,0 +1,62 @@
+version: "2"
+
+services:
+  copilot-backend:
+    image: ghcr.io/socfortress/copilot-backend:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/copilot-backend-data/logs:/opt/logs
+      - ./data/data:/opt/copilot/backend/data
+    env_file: .env
+    depends_on:
+      - copilot-mysql
+    restart: always
+
+  copilot-frontend:
+    image: ghcr.io/socfortress/copilot-frontend:latest
+    environment:
+      - SERVER_HOST=hunter.inviewmarketing.ca
+      - TLS_CERT_PATH=/etc/letsencrypt/live/hunter.inviewmarketing.ca/fullchain.pem
+      - TLS_KEY_PATH=/etc/letsencrypt/live/hunter.inviewmarketing.ca/privkey.pem
+    ports:
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    restart: always
+
+  copilot-mysql:
+    image: mysql:8.0.38-debian
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: copilot
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: always
+
+  copilot-minio:
+    image: quay.io/minio/minio:RELEASE.2024-09-13T20-26-02Z
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data/data/minio-data:/data
+    command: server /data --console-address ":9001"
+    restart: always
+
+  copilot-nuclei-module:
+    image: ghcr.io/socfortress/copilot-nuclei-module:latest
+    restart: always
+
+volumes:
+  mysql-data:
+
+networks:
+  default:
+    driver: bridge
