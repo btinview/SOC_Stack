@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Wazuh Stack",
+    "description": "Deploy the Wazuh single-node stack",
+    "type": 1,
+    "note": "Security monitoring platform",
+    "categories": ["Security", "Monitoring"],
+    "platform": "linux",
+    "logo": "https://wazuh.com/wp-content/uploads/2021/11/wazuh_logo.png",
+    "repository": {
+      "url": "https://raw.githubusercontent.com/btinview/SOC_Stack/main/wazuh/docker-compose.yml",
+      "stackfile": "docker-compose.yml"
+    }
+  },
+  {
+    "name": "CoPilot Stack",
+    "description": "Deploy SOC Fortress CoPilot",
+    "type": 1,
+    "note": "SOAR tool stack",
+    "categories": ["Security", "Automation"],
+    "platform": "linux",
+    "logo": "https://avatars.githubusercontent.com/u/89139308?s=200&v=4",
+    "repository": {
+      "url": "https://raw.githubusercontent.com/btinview/SOC_Stack/main/copilot/docker-compose.yml",
+      "stackfile": "docker-compose.yml"
+    }
+  }
+]
